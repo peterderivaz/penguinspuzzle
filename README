@@ -1,0 +1,23 @@
+3d puzzle game for Raspberry Pi.
+
+WebGL version at penguinspuzzle.appspot.com
+
+INSTRUCTIONS
+Run penguinspuzzle.bin on a Raspberry Pi to play.
+
+Requires a USB keyboard to control.
+Use arrow keys to move.
+Press space to switch penguins (only possible when baby penguins have been fed).
+Press r to restart.
+Press N/P to change to next/previous levels.
+Press Z to change zoom level.
+Press escape to quit.
+
+REBUILD
+1) mkdir /opt/vc/src/hello_pi/penguinspuzzle
+2) Copy all files into this directory.
+3) cd /opt/vc/src/hello_pi/penguinspuzzle
+4) make
+5) ./penguinspuzzle.bin
+
+Note that this relies on the makefiles included with the standard Raspberry Pi releases so this process will not work in a different directory location.
