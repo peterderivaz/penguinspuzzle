@@ -974,6 +974,7 @@ static void level_switchpengs(LEVEL_T *l)
 	for(int i=0;i<l->numpengs;i++)
 	{
 		PENGUIN_T *p = &l->P[i];
+		if (p->type==NONE) continue;
 		if (p->state==PUZZLER)
 		{
 			found=1;
