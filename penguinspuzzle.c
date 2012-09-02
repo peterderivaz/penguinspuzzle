@@ -424,12 +424,18 @@ void init_gl(void)
  
 //==============================================================================
 
-int main ()
+int main (int argc, char **argv)
 {
+   // 0=headphones, 1=hdmi
+   int audio_dest = 1;
+
+   if (argc > 1)
+      audio_dest = atoi(argv[1]);
+
    // Open communications with GPU
    bcm_host_init();
    
-   audio_init();
+   audio_init(audio_dest);
 
    // Clear application state
    memset( state, 0, sizeof( *state ) );
