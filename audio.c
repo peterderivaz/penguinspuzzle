@@ -341,8 +341,6 @@ static AUDIOPLAY_STATE_T *st;
 static int16_t *audio_start=NULL;
 static int audio_num=0;
 
-// 0=headphones, 1=hdmi
-static int dest = 1;
  // audio sample rate in Hz
 static int samplerate = 11025;
 //static int samplerate = 48000;
@@ -354,12 +352,13 @@ static int nchannels = 2;
 static int bitdepth = 16;
    
 // Open the audio hardware
-void audio_init(void)
+void audio_init(int dest)
 {
 
    int32_t ret;
    int buffer_size = (BUFFER_SIZE_SAMPLES * bitdepth * nchannels)>>3;
 
+   // 0=headphones, 1=hdmi
    assert(dest == 0 || dest == 1);
 
    ret = audioplay_create(&st, samplerate, nchannels, bitdepth, 10, buffer_size);
