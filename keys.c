@@ -94,10 +94,16 @@ static char *find_kbd_event(void)
 	while(1)
 	{
 		char *r=fgets(s,MAXC,fid);
-		char *h;
+		char *h,*isdock;
 		if (!r) break;
+		h=strstr(r,"Name=");
+		if (h)
+		{
+			isdock=strstr(r,"Motorola Mobility Motorola HD Dock");
+			continue;
+		}
 		h=strstr(r,"Handlers");
-		if (!h) continue;
+		if (!h || isdock) continue;
 		h=strstr(r,"kbd");
 		if (!h) continue;
 		h=strstr(r,"event");
