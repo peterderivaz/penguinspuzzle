@@ -39,6 +39,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <unistd.h>
 
 //#include "bcm_host.h"
+#include "drm_gbm.h"
 
 #include "GLES2/gl2.h"
 #include "EGL/egl.h"
@@ -438,6 +439,11 @@ int main (int argc, char **argv)
 
    // Clear application state
    memset( state, 0, sizeof( *state ) );
+   
+   drm_gbm_start();
+   drm_gbm_test();
+   drm_gbm_finish();
+   return 0;
       
    // Start OGLES
    init_ogl(state);
