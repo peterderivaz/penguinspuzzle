@@ -46,7 +46,7 @@ static EGLint attributes[] = {
 		EGL_ALPHA_SIZE, 0,
 		//EGL_ALPHA_SIZE, 8, // This causes a segmentation fault for some reason?
 		EGL_DEPTH_SIZE, 16,
-		EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
+		//EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
 		EGL_NONE
 		};
 

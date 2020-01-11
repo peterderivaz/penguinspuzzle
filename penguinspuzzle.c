@@ -74,14 +74,14 @@ static MODEL_T *sea,*expl2,*sky;
 
 typedef struct
 {
-   uint32_t screen_width;   // Dimensions of the physical screen
-   uint32_t screen_height;
+   //uint32_t screen_width;   // Dimensions of the physical screen
+   //uint32_t screen_height;
    uint32_t render_width;   // Dimensions that we will render to
    uint32_t render_height;
 // OpenGL|ES objects
-   EGLDisplay display;
-   EGLSurface surface;
-   EGLContext context;
+   //EGLDisplay display;
+   //EGLSurface surface;
+   //EGLContext context;
 
    GLuint verbose;
    GLuint vshader;
@@ -218,6 +218,8 @@ static void init_ogl(CUBE_STATE_T *state)
    check();
 
 #endif
+   state->render_width = 1280;
+   state->render_height = 720;
    aspect = 1280.0f/720.0f; // How to render to smaller surface?, how to get correct aspect ratio?
 
    // Set background color and clear buffers
@@ -456,6 +458,7 @@ int main (int argc, char **argv)
    {
 	  // Apply game logic and render scene
 	  tick();
+	  // Audio needs regular updates to work
 	  audio_update();
 	  // Show rendered scene
 	  drm_gbm_swap();
