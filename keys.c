@@ -167,8 +167,12 @@ void update_keys(void)
 		int c = b[10];
 		if (c==KEY_ESCAPE) {
 			drm_gbm_finish();
+			printf("Thank you for playing!\n"
+				"Press Ctrl-Alt-F7 to return to the desktop.\n"
+				"Press Enter to quit");
 			// drain keys
 			flush_in(stdin);
+			getchar();
 			exit(0);
 		}
 		//printf("Pressed 0x%x\n",c);

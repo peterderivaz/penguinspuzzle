@@ -45,6 +45,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "keys.h"
 #include "audio.h"
 #include "embed_file.h"
+#include "drm_gbm.h"
 
 #define ICESPEED 3 
 int moveable[OLAST];
@@ -1138,7 +1139,7 @@ void level_update(LEVEL_T *l)
 			if ( (up || down || right || left))
 			{
 				level_snapshot(l);
-				// May have slight problem with blocks not rewinding eactly unless heropeng is first in list?
+				// May have slight problem with blocks not rewinding exactly unless heropeng is first in list?
 				
 				int target=0; // Target angle
 				int allowReverse = 1;
@@ -1228,6 +1229,11 @@ static PENGUIN_T *level_newpenguin(LEVEL_T *l, int sq, OBJECT_T t, int skip_plac
 	{
 		p=&l->P[l->numpengs];
 		l->numpengs++;
+		if (l->numpengs>=MAXPENGS) {
+			printf("Allocated too many penguins!\n");
+			drm_gbm_finish();
+			exit(0);
+		}
 	}
 	p->x=(x+0.5f)*l->sz;
 	p->y=(y+0.5f)*l->sz;

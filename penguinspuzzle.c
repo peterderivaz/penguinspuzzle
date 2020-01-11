@@ -469,6 +469,32 @@ int main (int argc, char **argv)
 
    if (argc > 1)
       audio_dest = atoi(argv[1]);
+     
+   // Introduction messages
+   {
+     char *display_name = getenv("DISPLAY");
+     if (display_name) {
+	     printf("Running with DISPLAY=%s\n",display_name);
+	     printf("Penguins Puzzle on the Pi4 uses direct access to the frame buffer.\n"
+		    "This means that it will not work within a graphical desktop environment.\n"
+		    "If you press Ctrl-Alt-F1 you will be taken to a Linux virtual console where you can run penguinspuzzle safely.\n"
+		    "When you want to return to the desktop, just press Ctrl-Alt-F7\n");
+	     exit(-1);
+     }
+     printf("Welcome to Penguins Puzzle!\n"
+            "Your objective is to guide the large penguin to the red exit square.\n"
+	    "You move using the arrow keys\n\n"
+	    "If you pick up a bucket of fish and move into a baby penguin,\n"
+	    "the baby penguin can also be moved.\n"
+	    "Press space to switch between penguins.\n\n"
+	    "Press R to reset the level\n"
+	    "Press Backspace to undo a move\n"
+	    "Press N to skip to the next level (or P to return to a previous one)\n"
+	    "Press Z to change the zoom level\n"
+	    "Press Q to disable reflections and shadows\n\n"
+	    "Press the Enter key to start...\n");
+      getchar();
+   }
 
    audio_init(audio_dest);
 
@@ -477,7 +503,7 @@ int main (int argc, char **argv)
 
    // Start full screen drivers
    drm_gbm_start();
-      
+         
    // Start OGLES
    init_ogl(state);
    
