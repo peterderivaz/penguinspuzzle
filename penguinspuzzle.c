@@ -38,7 +38,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <assert.h>
 #include <unistd.h>
 
-#include "bcm_host.h"
+//#include "bcm_host.h"
 
 #include "GLES2/gl2.h"
 #include "EGL/egl.h"
@@ -115,6 +115,7 @@ static CUBE_STATE_T _state, *state=&_state;
  ***********************************************************/
 static void init_ogl(CUBE_STATE_T *state)
 {
+#if 0
    int32_t success = 0;
    EGLBoolean result;
    EGLint num_config;
@@ -220,6 +221,7 @@ static void init_ogl(CUBE_STATE_T *state)
    glClear( GL_COLOR_BUFFER_BIT );
 
    check();
+#endif
 }
 
 
@@ -432,9 +434,6 @@ int main (int argc, char **argv)
    if (argc > 1)
       audio_dest = atoi(argv[1]);
 
-   // Open communications with GPU
-   bcm_host_init();
-   
    audio_init(audio_dest);
 
    // Clear application state
@@ -448,8 +447,9 @@ int main (int argc, char **argv)
    while (1)
    {
 	  // Apply game logic and render scene
-      tick();
+	  tick();
 	  audio_update();
+	  // Show rendered scene
 	  eglSwapBuffers(state->display, state->surface);
    }
    return 0;
