@@ -137,6 +137,14 @@ void drm_gbm_start () {
 	eglMakeCurrent (display, egl_surface, egl_surface, context);
 }
 
+int drm_width(void) {
+	return mode_info.hdisplay;
+}
+
+int drm_height(void) {
+	return mode_info.vdisplay;
+}
+
 void drm_gbm_test(void) {
 	int i;
 	for (i = 0; i < 600; i++) draw (i / 600.0f);

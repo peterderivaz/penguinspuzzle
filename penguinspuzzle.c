@@ -226,9 +226,10 @@ static void init_ogl(CUBE_STATE_T *state)
    check();
 
 #endif
-   state->render_width = 1280;
-   state->render_height = 720;
-   aspect = 1280.0f/720.0f; // How to render to smaller surface?, how to get correct aspect ratio?
+   state->render_width = drm_width();
+   state->render_height = drm_height();
+   printf("Display %d by %d\n",state->render_width,state->render_height);
+   aspect = (float)state->render_width/state->render_height; // Could render to smaller buffer (see ALT_WIDTH) and then display afterwards?  Is there still a way of doing this with dispman?
 
    // Set background color and clear buffers
    glClearColor(0.15f, 0.25f, 0.35f, 1.0f);
