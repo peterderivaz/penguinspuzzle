@@ -40,6 +40,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdlib.h>
 #include <string.h>
 #include "keys.h"
+#include "drm_gbm.h"
 
 int currentlyPressedKeys[256];
 static int fd=-1;
@@ -140,8 +141,11 @@ void update_keys(void)
 		if (t!=1) return;
 		//int c= b[10]+256*b[11];
 		int c = b[10];
-		if (c==KEY_ESCAPE)
+		if (c==KEY_ESCAPE) {
+			drm_gbm_finish();
+			// TODO drain keys somehow?
 			exit(0);
+		}
 		//printf("Pressed 0x%x\n",c);
 		if (b[12]==1)
 		{

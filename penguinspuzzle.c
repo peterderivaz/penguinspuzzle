@@ -217,12 +217,15 @@ static void init_ogl(CUBE_STATE_T *state)
    assert(EGL_FALSE != result);
    check();
 
+#endif
+   aspect = 1280.0f/720.0f; // How to render to smaller surface?, how to get correct aspect ratio?
+
    // Set background color and clear buffers
    glClearColor(0.15f, 0.25f, 0.35f, 1.0f);
    glClear( GL_COLOR_BUFFER_BIT );
 
    check();
-#endif
+
 }
 
 
@@ -440,13 +443,12 @@ int main (int argc, char **argv)
    // Clear application state
    memset( state, 0, sizeof( *state ) );
    
+   // Start full screen drivers
    drm_gbm_start();
-   drm_gbm_test();
-   drm_gbm_finish();
-   return 0;
       
    // Start OGLES
    init_ogl(state);
+   
    // Load data for level
    init_gl();
 
@@ -456,7 +458,7 @@ int main (int argc, char **argv)
 	  tick();
 	  audio_update();
 	  // Show rendered scene
-	  eglSwapBuffers(state->display, state->surface);
+	  drm_gbm_swap();
    }
    return 0;
 }

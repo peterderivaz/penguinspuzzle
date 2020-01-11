@@ -44,6 +44,8 @@ static EGLint attributes[] = {
 		EGL_GREEN_SIZE, 8,
 		EGL_BLUE_SIZE, 8,
 		EGL_ALPHA_SIZE, 0,
+		//EGL_ALPHA_SIZE, 8, // This causes a segmentation fault for some reason?
+		EGL_DEPTH_SIZE, 16,
 		EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
 		EGL_NONE
 		};
@@ -138,6 +140,10 @@ void drm_gbm_start () {
 void drm_gbm_test(void) {
 	int i;
 	for (i = 0; i < 600; i++) draw (i / 600.0f);
+}
+
+void drm_gbm_swap(void) {
+	swap_buffers();
 }
 
 void drm_gbm_finish(void) {
