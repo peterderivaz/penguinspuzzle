@@ -98,7 +98,7 @@ SHADER_T *shader_new(const GLchar *vs, const GLchar *fs)
     {
 	int ret;
 	glGetProgramiv(program, GL_LINK_STATUS, &ret);
-	printf("Link status %d\n",ret);
+	if (!ret) printf("Link status %d\n",ret);
     }
 
     //if (!glGetProgramParameter(program, GL_LINK_STATUS)) 

@@ -118,6 +118,30 @@ static char *find_kbd_event(void)
 	return ans;
 }
 
+int flush_in(FILE *file)
+{
+    int ch;
+    int flags;
+    int fd;
+
+    fd = fileno(file);
+    flags = fcntl(fd, F_GETFL, 0);
+    if (flags < 0) {
+        return -1;
+    }
+    if (fcntl(fd, F_SETFL, flags | O_NONBLOCK)) {
+        return -1;
+    }
+    do {
+        ch = fgetc(file);
+    } while (ch != EOF);
+    clearerr(file);
+    if (fcntl(fd, F_SETFL, flags)) {
+        return -1;
+    }
+    return 0;
+}
+
 void update_keys(void)
 {
 	if (fd<0)
@@ -143,7 +167,8 @@ void update_keys(void)
 		int c = b[10];
 		if (c==KEY_ESCAPE) {
 			drm_gbm_finish();
-			// TODO drain keys somehow?
+			// drain keys
+			flush_in(stdin);
 			exit(0);
 		}
 		//printf("Pressed 0x%x\n",c);
