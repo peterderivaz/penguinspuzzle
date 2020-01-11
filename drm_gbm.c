@@ -112,6 +112,15 @@ return -1;
 }
 
 void drm_gbm_start () {
+	char *display_name = getenv("DISPLAY");
+	if (display_name) {
+		printf("Running with DISPLAY=%s\n",display_name);
+		printf("Penguins Puzzle on the Pi4 uses direct access to the frame buffer.\n"
+		       "This means that it will not work within a graphical desktop environment.\n"
+		       "If you press Ctrl-Alt-F1 you will be taken to a Linux virtual console where you can run penguinspuzzle safely.\n"
+		       "When you want to return to the desktop, just press Ctrl-Alt-F7\n");
+		exit(-1);
+	}
 	device = open ("/dev/dri/card1", O_RDWR);
 	resources = drmModeGetResources (device);
 	connector = find_connector (resources);
