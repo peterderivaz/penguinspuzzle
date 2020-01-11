@@ -65,13 +65,17 @@ Creates and compiles a new shader.
 */
 int getShader(const GLchar *shader_src,int is_frag) 
 {
+	GLint ret;
 	int shader = glCreateShader(is_frag ? GL_FRAGMENT_SHADER : GL_VERTEX_SHADER);
 	
 	glShaderSource(shader, 1, &shader_src, 0);
 	glCompileShader(shader);
 
 	//if (!glGetShaderParameter(shader, GL_COMPILE_STATUS))
-	//showlog(shader);
+	glGetShaderiv(shader, GL_COMPILE_STATUS, &ret);
+	if (!ret) {
+		showlog(shader);
+	}
 
 	return shader;
 }
@@ -90,6 +94,12 @@ SHADER_T *shader_new(const GLchar *vs, const GLchar *fs)
     glAttachShader(program, vertexShader);
     glAttachShader(program, fragmentShader);
     glLinkProgram(program);
+    
+    {
+	int ret;
+	glGetProgramiv(program, GL_LINK_STATUS, &ret);
+	printf("Link status %d\n",ret);
+    }
 
     //if (!glGetProgramParameter(program, GL_LINK_STATUS)) 
 	//showprogramlog(program);
@@ -104,6 +114,13 @@ SHADER_T *shader_new(const GLchar *vs, const GLchar *fs)
 	s->unif_texture         = glGetUniformLocation(program, "texture");
 	s->unif_texture_reflect = glGetUniformLocation(program, "texture_reflect");
 	s->unif_blend           = glGetUniformLocation(program, "blend");
+	
+    //printf("tex=%d\n",s->attr_tex);
+    //printf("v=%d\n",s->attr_vertex);
+    //printf("n=%d\n",s->attr_normal);
+    //printf("w=%d\n",s->unif_world);
+    //printf("view=%d\n",s->unif_view);
+    //printf("view reflect=%d\n",s->unif_view_reflect);
     return s;
 }
 
@@ -134,7 +151,7 @@ Configure the world matrix
 */	
 void shader_world(SHADER_T *s, float M[4][4])
 {
-	glUniformMatrix4fv(s->unif_world,16,GL_FALSE,(float*)M); // Note that Raspberry Pi does not support the input of transposed matrices
+	glUniformMatrix4fv(s->unif_world,1,GL_FALSE,(float*)M); // Note that Raspberry Pi does not support the input of transposed matrices
 }
 
 /*
@@ -142,7 +159,7 @@ Configure the view matrix
 */	
 void shader_view(SHADER_T *s, float M[4][4])
 {
-	glUniformMatrix4fv(s->unif_view,16,GL_FALSE,(float*)M); // Note that Raspberry Pi does not support the input of transposed matrices
+	glUniformMatrix4fv(s->unif_view,1,GL_FALSE,(float*)M); // Note that Raspberry Pi does not support the input of transposed matrices
 }
 
 /*
@@ -150,6 +167,6 @@ Configure the reflected view matrix
 */	
 void shader_view2(SHADER_T *s, float M[4][4])
 {
-	glUniformMatrix4fv(s->unif_view_reflect,16,GL_FALSE,(float*)M); // Note that Raspberry Pi does not support the input of transposed matrices
+	glUniformMatrix4fv(s->unif_view_reflect,1,GL_FALSE,(float*)M); // Note that Raspberry Pi does not support the input of transposed matrices
 }
 

@@ -147,6 +147,8 @@ void drm_gbm_swap(void) {
 }
 
 void drm_gbm_finish(void) {
+	printf("Error status=%d\n",glGetError());
+	
 	drmModeSetCrtc (device, crtc->crtc_id, crtc->buffer_id, crtc->x, crtc->y, &connector_id, 1, &crtc->mode);
 	drmModeFreeCrtc (crtc);
 	if (previous_bo) {

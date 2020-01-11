@@ -102,6 +102,14 @@ static CUBE_STATE_T _state, *state=&_state;
 
 #define check() assert(glGetError() == 0)
 
+static void report_error(char *err_msg) {
+    int err = glGetError();
+    if (err) {
+	printf("Error: %d after %s\n",err,err_msg);
+	drm_gbm_finish();
+	exit(-1);
+    }
+}
     
 /***********************************************************
  * Name: init_ogl
@@ -226,6 +234,7 @@ static void init_ogl(CUBE_STATE_T *state)
    glClearColor(0.15f, 0.25f, 0.35f, 1.0f);
    glClear( GL_COLOR_BUFFER_BIT );
 
+   report_error("Clear buffer");
    check();
 
 }
@@ -253,17 +262,26 @@ void drawScene(void)
 	}
 	if (high_quality)
 	{
+	        report_error("Start shadow render");
 		glColorMask(1,1,1,1);
+		report_error("Color mask");
 		framebuffer_select(shadow_fb);
+		report_error("Framebuffer select");
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		report_error("Shadow clear");
 		mat4_identity(world);
 		shader_select(sun_shader);
+		report_error("Shadow sun select");
 		shader_view(sun_shader,sun_view->M);
+		report_error("Shadow sun view select");
 		shader_world(sun_shader,world);
+		report_error("Shadow world matrix set");
 		level_draw_tiles(level,sun_shader);
 		level_draw_objects(level,sun_shader,0);
 		level_draw_objects(level,sun_shader,1);
+		report_error("Drawn level");
 		glFinish();
+		report_error("Shadow render");
 	}
 	
 	float br=288;
@@ -287,6 +305,7 @@ void drawScene(void)
 		shader_world(shader,world);
 		level_draw_tiles(level,shader);
 		glFinish();
+		report_error("Reflection render");
 	}
 	
 	
@@ -309,9 +328,13 @@ void drawScene(void)
 	if (high_quality)
 		level_shader = shadow_shader;
 	shader_select(level_shader);
+	report_error("Level shader select");
 	shader_view(level_shader,view->M);
+	report_error("Level shader view");
 	shader_view2(level_shader,sun_view->M);
+	report_error("Level shader view 2");
 	shader_world(level_shader,world);
+	report_error("World level shader");
 	level_draw_tiles(level,level_shader);
 	shader_select(shader);
 	shader_blend(shader,frame*0.0001f,0,0,0);
@@ -357,6 +380,7 @@ void drawScene(void)
 	glDepthMask(1);
 	
 	glFinish();
+	report_error("Final render");
 }
 
 
@@ -425,12 +449,17 @@ void init_gl(void)
 	float B2[3]={300+30+240,300-20+240,40};
 	view_look_at(level->view,A,B,0,0);
 	view_look_at(sun_view,A2,B2,1,0);
+	
+	report_error("Created views");
 
 }
 
 
  
 //==============================================================================
+
+extern void draw_cube_smooth(unsigned i);
+extern void init_cube_smooth(void);
 
 int main (int argc, char **argv)
 {
@@ -444,7 +473,7 @@ int main (int argc, char **argv)
 
    // Clear application state
    memset( state, 0, sizeof( *state ) );
-   
+
    // Start full screen drivers
    drm_gbm_start();
       

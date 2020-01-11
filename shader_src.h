@@ -51,13 +51,13 @@ const GLchar *shader_vs =
 "	}                                                              \n";
 
 const GLchar *shader_fs =	
-"    precision mediump float;	                                 \n"
+//"    precision mediump float;	                                 \n"
 "	uniform vec4 color;                                          \n"
 "	uniform sampler2D texture;                                   \n"
 "	varying vec2 tcoord;                                         \n"
 "	varying float light;                                         \n"
 "	void main(void) {                                            \n"
-"	    mediump vec4 col = texture2D(texture,tcoord);            \n"
+"	     vec4 col = texture2D(texture,tcoord);            \n"
 "		if (col.x>0.9 && col.y>0.6 && col.y<0.61 && col.z<0.1)   \n"
 "			 discard;                                            \n"
 "		gl_FragColor = col*light;                                \n"
@@ -88,13 +88,13 @@ const GLchar *explshader_vs =
 "	}                                                                                                  \n";
 
 const GLchar *explshader_fs =	
-"    precision mediump float;	                      \n"
+//"    precision mediump float;	                      \n"
 "	uniform vec4 color;                               \n"
 "	uniform sampler2D texture;                        \n"
 "	varying vec2 tcoord;                              \n"
 "	varying float light;                              \n"
 "	void main(void) {                                 \n"
-"	    mediump vec4 col = texture2D(texture,tcoord); \n"
+"	     vec4 col = texture2D(texture,tcoord); \n"
 "		gl_FragColor = col;                           \n"
 "		gl_FragColor.a = col.b*0.8;                   \n"
 "	}                                                 \n";
@@ -122,7 +122,7 @@ const GLchar *shadowshader_vs =
 "	}                                                                                \n";
 
 const GLchar *shadowshader_fs =
-"    precision mediump float;	                                                    \n"
+//"    precision mediump float;	                                                    \n"
 "	uniform vec4 color;                                                             \n"
 "	uniform sampler2D texture;                                                      \n"
 "	varying vec2 tcoord;                                                            \n"
@@ -131,10 +131,10 @@ const GLchar *shadowshader_fs =
 "	varying vec4 reflect_pos;                                                       \n"
 "	uniform sampler2D texture_reflect;                                              \n"
 "	void main(void) {                                                               \n"
-"	    mediump vec4 col = texture2D(texture,tcoord);                               \n"
+"	     vec4 col = texture2D(texture,tcoord);                               \n"
 "		if (col.x>0.9 && col.y>0.6 && col.y<0.61 && col.z<0.1)                      \n"
 "			 discard;                                                               \n"
-"		mediump vec4 col2;                                                          \n"
+"		 vec4 col2;                                                          \n"
 "		vec2 reflect_sample;                                                        \n"
 "		reflect_sample = (vec2(reflect_pos.x,reflect_pos.y)*0.5)/reflect_pos.w+0.5; \n"
 "		col2 = texture2D(texture_reflect,reflect_sample);                           \n"
@@ -161,12 +161,12 @@ const GLchar *sunshader_vs =
 "	}                                        \n";
 
 const GLchar *sunshader_fs =
-"    precision mediump float;                                  \n"
+//"    precision mediump float;                                  \n"
 "    uniform sampler2D texture;	                               \n"
 "	varying vec2 tcoord;                                       \n"
 "	varying float light;                                       \n"
 "	void main(void) {                                          \n"
-"	    mediump vec4 col = texture2D(texture,tcoord);          \n"
+"	     vec4 col = texture2D(texture,tcoord);          \n"
 "		if (col.x>0.9 && col.y>0.6 && col.y<0.61 && col.z<0.1) \n"
 "			 discard;                                          \n"
 "		gl_FragColor = vec4(light,light,light,1.0);            \n"
@@ -190,17 +190,17 @@ const GLchar *watershader_vs =
 "	}                                       \n";
 
 const GLchar *watershader_fs =
-"    precision mediump float;	                                                                     \n"
+//"    precision mediump float;	                                                                     \n"
 "	uniform sampler2D texture;                                                                       \n"
 "	uniform sampler2D texture_reflect;                                                               \n"
 "	varying vec2 tcoord;                                                                             \n"
 "	varying vec2 tcoord2;                                                                            \n"
 "	varying vec4 reflect_pos;                                                                        \n"
 "	void main(void) {                                                                                \n"
-"		mediump vec3 eye;                                                                            \n"
+"		 vec3 eye;                                                                            \n"
 "		float light2;                                                                                \n"
-"		mediump vec4 col;                                                                            \n"
-"		mediump vec4 col2;                                                                           \n"
+"		 vec4 col;                                                                            \n"
+"		 vec4 col2;                                                                           \n"
 "		vec2 reflect_sample;                                                                         \n"
 "		col = texture2D(texture,tcoord);                                                             \n"
 "		col2 = texture2D(texture,tcoord2);                                                           \n"
