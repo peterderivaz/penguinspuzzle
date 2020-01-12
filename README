@@ -14,7 +14,7 @@ Press Z to change zoom level.
 Press escape to quit.
 
 REBUILD
-1) sudo apt-get install libdrm-dev libgbm-dev libgles2-mesa-dev
+1) sudo apt-get install libdrm-dev libgbm-dev libgles2-mesa-dev libasound2-dev
 2) make 
 3) (If running in the desktop) Press Ctrl-Alt-F1 
 4) ./penguinspuzzle.bin
@@ -23,6 +23,3 @@ This program takes direct access of the framebuffer for fullscreen so does not w
 However, it is easy to switch out of the desktop by pressing Ctrl-Alt-F1 to change to a virtual console.
 You can switch back to the desktop by pressing Ctrl-Alt-F7 when done.
 
-This is a work in progress:
-  Audio not currently supported on the pi4 branch.
-  Graphics currently don't display (other than the background colour).

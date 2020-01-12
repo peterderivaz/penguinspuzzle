@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2012, Broadcom Europe Ltd
+Copyright (c) 2020, Peter de Rivaz
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

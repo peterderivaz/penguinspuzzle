@@ -41,6 +41,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string.h>
 #include "keys.h"
 #include "drm_gbm.h"
+#include "audio.h"
 
 int currentlyPressedKeys[256];
 static int fd=-1;
@@ -167,6 +168,7 @@ void update_keys(void)
 		int c = b[10];
 		if (c==KEY_ESCAPE) {
 			drm_gbm_finish();
+			audio_exit();
 			printf("Thank you for playing!\n"
 				"Press Ctrl-Alt-F7 to return to the desktop.\n"
 				"Press Enter to quit");
