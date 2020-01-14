@@ -127,7 +127,7 @@ typedef struct level_s
 	int delay;
 	int grid;
     float sz;
-	int levnum;
+	unsigned int levnum;
 	int w,h;
 	int numpengs;
 	PENGUIN_T P[MAXPENGS];
