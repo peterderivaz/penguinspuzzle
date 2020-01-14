@@ -494,6 +494,7 @@ int main (int argc, char **argv)
 	    "Press N to skip to the next level (or P to return to a previous one)\n"
 	    "Press Z to change the zoom level\n"
 	    "Press Q to disable reflections and shadows\n\n"
+	    "Run 'penguinspuzzle 0' to use headphones\n\n"  
 	    "Press the Enter key to start...\n");
       getchar();
    }

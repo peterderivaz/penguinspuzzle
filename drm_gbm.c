@@ -85,6 +85,7 @@ bo = gbm_surface_lock_front_buffer (gbm_surface);
 handle = gbm_bo_get_handle (bo).u32;
 pitch = gbm_bo_get_stride (bo);
 drmModeAddFB (device, mode_info.hdisplay, mode_info.vdisplay, 24, 32, pitch, handle, &fb);
+//drmModeAddFB (device, 640, 480, 24, 32, pitch, handle, &fb);
 drmModeSetCrtc (device, crtc->crtc_id, fb, 0, 0, &connector_id, 1, &mode_info);
 if (previous_bo) {
   drmModeRmFB (device, previous_fb);
@@ -130,6 +131,7 @@ void drm_gbm_start () {
 	drmModeFreeResources (resources);
 	gbm_device = gbm_create_device (device);
 	gbm_surface = gbm_surface_create (gbm_device, mode_info.hdisplay, mode_info.vdisplay, GBM_FORMAT_XRGB8888, GBM_BO_USE_SCANOUT|GBM_BO_USE_RENDERING);
+	//gbm_surface = gbm_surface_create (gbm_device, 640, 480, GBM_FORMAT_XRGB8888, GBM_BO_USE_SCANOUT|GBM_BO_USE_RENDERING);
 	display = eglGetDisplay (gbm_device);
 	eglInitialize (display, NULL ,NULL);
 	eglBindAPI (EGL_OPENGL_API);
