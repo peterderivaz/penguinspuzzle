@@ -38,7 +38,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <assert.h>
 #include <unistd.h>
 
-//#include "bcm_host.h"
+#include "bcm_host.h"
 #include "drm_gbm.h"
 
 #include "GLES2/gl2.h"
@@ -466,6 +466,8 @@ int main (int argc, char **argv)
 {
    // 0=headphones, 1=hdmi
    int audio_dest = 1;
+   
+   bcm_host_init();
 
    if (argc > 1)
       audio_dest = atoi(argv[1]);
