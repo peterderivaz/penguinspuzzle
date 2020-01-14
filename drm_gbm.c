@@ -113,6 +113,12 @@ return -1;
 
 void drm_gbm_start () {
 	device = open ("/dev/dri/card1", O_RDWR);
+	if (device < 0)
+	  device = open ("/dev/dri/card0", O_RDWR);
+	if (device < 0) {
+	  puts("Unable to open /dev/dri/card[01]. Is vc4-fkms-v3d enabled?");
+	  exit(1);
+	}
 	resources = drmModeGetResources (device);
 	connector = find_connector (resources);
 	connector_id = connector->connector_id;
