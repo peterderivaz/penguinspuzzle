@@ -475,7 +475,7 @@ int main (int argc, char **argv)
    // Introduction messages
    {
      char *display_name = getenv("DISPLAY");
-     if (display_name) {
+     if (0 && display_name) {
 	     printf("Running with DISPLAY=%s\n",display_name);
 	     printf("Penguins Puzzle on the Pi4 uses direct access to the frame buffer.\n"
 		    "This means that it will not work within a graphical desktop environment.\n"
