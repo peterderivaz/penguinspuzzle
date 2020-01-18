@@ -63,36 +63,37 @@ uint64_t modifier;
 
 
 static drmModeConnector *find_connector (drmModeRes *resources) {
-
-for (i=0; i<resources->count_connectors; i++) {
-  drmModeConnector *connector = drmModeGetConnector (device, resources->connectors[i]);
-  if (connector->connection == DRM_MODE_CONNECTED) {return connector;}
-  drmModeFreeConnector (connector);
-  }
-return NULL; // if no connector found
+	for (i=0; i<resources->count_connectors; i++) {
+		drmModeConnector *connector = drmModeGetConnector (device, resources->connectors[i]);
+		if (connector->connection == DRM_MODE_CONNECTED) {
+			return connector;
+		}
+		drmModeFreeConnector (connector);
+	}
+	return NULL; // if no connector found
 }
 
 static drmModeEncoder *find_encoder (drmModeRes *resources, drmModeConnector *connector) {
 
-if (connector->encoder_id) {return drmModeGetEncoder (device, connector->encoder_id);}
-return NULL; // if no encoder found
+	if (connector->encoder_id) {return drmModeGetEncoder (device, connector->encoder_id);}
+		return NULL; // if no encoder found
 }
 
 static void swap_buffers () {
 
-eglSwapBuffers (display, egl_surface);
-bo = gbm_surface_lock_front_buffer (gbm_surface);
-handle = gbm_bo_get_handle (bo).u32;
-pitch = gbm_bo_get_stride (bo);
-drmModeAddFB (device, mode_info.hdisplay, mode_info.vdisplay, 24, 32, pitch, handle, &fb);
-//drmModeAddFB (device, 640, 480, 24, 32, pitch, handle, &fb);
-drmModeSetCrtc (device, crtc->crtc_id, fb, 0, 0, &connector_id, 1, &mode_info);
-if (previous_bo) {
-  drmModeRmFB (device, previous_fb);
-  gbm_surface_release_buffer (gbm_surface, previous_bo);
-  }
-previous_bo = bo;
-previous_fb = fb;
+	eglSwapBuffers (display, egl_surface);
+	bo = gbm_surface_lock_front_buffer (gbm_surface);
+	handle = gbm_bo_get_handle (bo).u32;
+	pitch = gbm_bo_get_stride (bo);
+	drmModeAddFB (device, mode_info.hdisplay, mode_info.vdisplay, 24, 32, pitch, handle, &fb);
+	//drmModeAddFB (device, 640, 480, 24, 32, pitch, handle, &fb);
+	drmModeSetCrtc (device, crtc->crtc_id, fb, 0, 0, &connector_id, 1, &mode_info);
+	if (previous_bo) {
+	  drmModeRmFB (device, previous_fb);
+	  gbm_surface_release_buffer (gbm_surface, previous_bo);
+	  }
+	previous_bo = bo;
+	previous_fb = fb;
 }
 
 static void draw (float progress) {
