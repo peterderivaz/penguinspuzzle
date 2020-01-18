@@ -19,7 +19,6 @@ REBUILD
 3) (If running in the desktop) Press Ctrl-Alt-F1 
 4) ./penguinspuzzle.bin
 
-This program takes direct access of the framebuffer for fullscreen so does not work within a graphical desktop.
-However, it is easy to switch out of the desktop by pressing Ctrl-Alt-F1 to change to a virtual console.
-You can switch back to the desktop by pressing Ctrl-Alt-F7 when done.
+This branch renders within X.
+However, this means that it is at a much lower framerate than the native version.
 

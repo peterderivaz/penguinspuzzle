@@ -74,6 +74,7 @@ int getShader(const GLchar *shader_src,int is_frag)
 	//if (!glGetShaderParameter(shader, GL_COMPILE_STATUS))
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &ret);
 	if (!ret) {
+	        printf("Error in getShader (is_frag=%d)\n",is_frag);
 		showlog(shader);
 	}
 

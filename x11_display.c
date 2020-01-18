@@ -30,7 +30,6 @@ static EGLSurface egl_surface;
        int i;
        
     
-
 static EGLint attributes[] = {
 		EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
 		EGL_RED_SIZE, 8,
@@ -42,6 +41,8 @@ static EGLint attributes[] = {
 		//EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
 		EGL_NONE
 		};
+		
+	
 
 static const EGLint context_attribs[] = {
 		EGL_CONTEXT_CLIENT_VERSION, 2,
@@ -52,8 +53,11 @@ static const EGLint context_attribs[] = {
 Display    *x_display;
 Window      win;
 
+// h/v display is the size of the allocated window
+// However, after full screen has different width and height.
 int hdisplay = 800;
 int vdisplay = 480;
+XWindowAttributes  gwa;
 
 static int match_config_to_visual(EGLDisplay egl_display, EGLint visual_id, EGLConfig *configs, int count) {
 
@@ -141,23 +145,47 @@ void drm_gbm_start () {
 	if (!eglInitialize (egl_display, NULL ,NULL)) {
 		EXIT("Failed to initialize");
 	}
-	eglBindAPI (EGL_OPENGL_API);
+	if (!eglBindAPI (EGL_OPENGL_API)) {
+		EXIT("Failed to bind API");
+	}
 	eglGetConfigs(egl_display, NULL, 0, &count);
 	configs = malloc(count * sizeof *configs);
-	eglChooseConfig (egl_display, attributes, configs, count, &num_config);
-	config_index = match_config_to_visual(egl_display,GBM_FORMAT_XRGB8888,configs,num_config);
+	if (!eglChooseConfig (egl_display, attributes, configs, count, &num_config)) {
+		EXIT("Failed to choose config");
+	}
+	printf("Found %d configs\n",num_config);
+	if (1) {
+		config_index = 0;
+	} else {
+		config_index = match_config_to_visual(egl_display,GBM_FORMAT_XRGB8888,configs,num_config);
+		printf("USING CONFIG %d\n",config_index);
+		if (config_index<0) {
+			EXIT("Failed to find matching context");
+		}
+	}
 	context = eglCreateContext (egl_display, configs[config_index], EGL_NO_CONTEXT, context_attribs);
+	if (context==EGL_NO_CONTEXT) {
+		EXIT("Failed to create context\n");
+	}
 	egl_surface = eglCreateWindowSurface (egl_display, configs[config_index], (EGLNativeWindowType)win, NULL);
+	if (egl_surface==EGL_NO_SURFACE) {
+		EXIT("Failed to create window surface");
+	}
 	free(configs);
 	eglMakeCurrent (egl_display, egl_surface, egl_surface, context);
+	
+	XGetWindowAttributes ( x_display , win , &gwa );
+	printf("Xwindow %dx%d\n",gwa.width,gwa.height);
 }
 
 int drm_width(void) {
-	return hdisplay;
+	return gwa.width;
+	//return hdisplay;
 }
 
 int drm_height(void) {
-	return vdisplay;
+	return gwa.height;
+	//return vdisplay;
 }
 
 void drm_gbm_swap(void) {
