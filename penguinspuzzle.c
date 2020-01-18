@@ -493,8 +493,10 @@ int main (int argc, char **argv)
 	    "Press Backspace to undo a move\n"
 	    "Press N to skip to the next level (or P to return to a previous one)\n"
 	    "Press Z to change the zoom level\n"
-	    "Press Q to disable reflections and shadows\n\n"
+	    "Press Q to disable reflections and shadows\n"
+	    "Press Escape to quit\n\n"
 	    "Run 'penguinspuzzle 0' to use headphones\n\n"  
+	    "If the keyboard doesn't respond, try plugging your mouse and keyboard in a different order\n\n"
 	    "Press the Enter key to start...\n");
       getchar();
    }
