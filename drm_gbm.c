@@ -78,7 +78,7 @@ static int drm_use_primary(void) {
 
 static drmModeConnector *find_connector (drmModeRes *resources) {
 	for (i=0; i<resources->count_connectors; i++) {
-		drmModeConnector *connector = drmModeGetConnector (device, resources->connectors[i]);
+		drmModeConnector *connector = drmModeGetConnectorCurrent (device, resources->connectors[i]);
 		if (connector->connection == DRM_MODE_CONNECTED) {
 			return connector;
 		}
@@ -138,25 +138,28 @@ static int match_config_to_visual(EGLDisplay egl_display, EGLint visual_id, EGLC
 
 uint32_t find_plane(drmModePlaneResPtr resources, uint32_t crtc_id) {
 	int i;
+	// First pass to find the primary plane so we can reuse it
 	for (i = 0; i < resources->count_planes; i++) {
 		uint32_t pl = resources->planes[i];
 		drmModePlanePtr ovr = drmModeGetPlane(device,pl);
 		if (!ovr)
 			continue;
-		//printf("Plane %d/%d->%d id=%d crtx_id=%d\n",i,resources->count_planes,pl,ovr->plane_id,ovr->crtc_id);
-		
+		printf("Plane %d/%d->%d id=%d crtc_id=%d\n",i,resources->count_planes,pl,ovr->plane_id,ovr->crtc_id);
+		if (ovr->crtc_id != crtc_id)
+			continue;
+		printf("Found existing plane\n");
 		return pl;
-
-		//if (!format_support(ovr, p->fourcc))
-		//	continue;
-
-		/*if ((ovr->possible_crtcs & (1 << pipe)) &&
-		    (ovr->crtc_id == 0 || ovr->crtc_id == p->crtc_id)) {
-			plane_id = ovr->plane_id;
-			break;
-		}*/
 	}
-	printf("No planes found\n");
+	printf("No primary planes found\n");
+	
+	// Second pass to find any available plane
+	for (i = 0; i < resources->count_planes; i++) {
+		uint32_t pl = resources->planes[i];
+		drmModePlanePtr ovr = drmModeGetPlane(device,pl);
+		if (!ovr)
+			continue;
+		return pl;
+	}
 	return -1;
 }
 
@@ -164,18 +167,26 @@ void drm_gbm_start () {
 	device = open ("/dev/dri/card1", O_RDWR);
 	if (device < 0)
 	  device = open ("/dev/dri/card0", O_RDWR);
+	//device = drmOpen("vc4",NULL);
 	if (device < 0) {
 	  puts("Unable to open /dev/dri/card[01]. Is vc4-fkms-v3d enabled?");
 	  exit(1);
 	}
+	drmSetClientCap(device, DRM_CLIENT_CAP_ATOMIC, 1); // Setting this seems to allow us to see more planes
 	resources = drmModeGetResources (device);
+	if (!resources) {
+		printf("DRM has no resources\n");
+		exit(-1);
+	}
 	connector = find_connector (resources);
+	printf("Found %d modes\n",connector->count_modes);
 	connector_id = connector->connector_id;
 	mode_info = connector->modes[0];
 	encoder = find_encoder (resources, connector);
 	planeResources = drmModeGetPlaneResources(device);
 	plane_id = find_plane(planeResources, encoder->crtc_id);
 	crtc = drmModeGetCrtc (device, encoder->crtc_id);
+	mode_info = crtc->mode;
 	drmModeFreeEncoder (encoder);
 	drmModeFreeConnector (connector);
 	drmModeFreeResources (resources);
