@@ -37,6 +37,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <math.h>
 #include <assert.h>
 #include <unistd.h>
+#include <sys/time.h>
 
 #include "bcm_host.h"
 #include "drm_gbm.h"
@@ -387,11 +388,33 @@ void drawScene(void)
 
 void tick(void) 
 {
-	update_keys();
-	level_update_view(level);
-	level_update(level);
-	if (!slow_mode)
+	static int init=1;
+	static struct timeval start;
+	struct timeval now;
+	static int frames_shown=0;
+	int numticks=1;
+	gettimeofday(&now, NULL);
+	if (init) {
+		start = now;
+		init=0;
+	} else {
+		int fps = slow_mode ? 30 : 60; // Target framerate
+		int secs = now.tv_sec-start.tv_sec;
+		int usecs = now.tv_usec - start.tv_usec;
+		int frames = (secs*fps+(usecs*fps)/1000000);
+		numticks = frames-frames_shown;
+		if (numticks>30)
+			numticks=30;
+		frames_shown = frames;
+	}
+	printf("%d\n",numticks);
+	if (numticks==0)
+		return;
+	for(;numticks>0;numticks--) {
+		update_keys();
+		level_update_view(level);
 		level_update(level);
+	}
 	drawScene();
 }
 

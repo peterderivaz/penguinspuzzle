@@ -93,13 +93,24 @@ static drmModeEncoder *find_encoder (drmModeRes *resources, drmModeConnector *co
 		return NULL; // if no encoder found
 }
 
-static void swap_buffers () {
+static void wait_vblank(void) {
+	drmVBlank vbl;
+	vbl.request.type = DRM_VBLANK_RELATIVE;
+	//vbl.request.type |= DRM_VBLANK_SECONDARY;
+	vbl.request.sequence = 1;
+	vbl.request.signal = 0;
+	(void) drmWaitVBlank(device, &vbl);
+}
 
+static void swap_buffers () {
+	
+	
 	eglSwapBuffers (display, egl_surface);
 	bo = gbm_surface_lock_front_buffer (gbm_surface);
 	handle = gbm_bo_get_handle (bo).u32;
 	pitch = gbm_bo_get_stride (bo);
 	drmModeAddFB (device, render_width, render_height, 24, 32, pitch, handle, &fb);
+	//wait_vblank(); Solves tearing, but runs at 20fps instead of 30fps
 	if (drm_use_primary()) {
 		drmModeSetCrtc (device, crtc->crtc_id, fb, 0, 0, &connector_id, 1, &mode_info);
 	} else {
